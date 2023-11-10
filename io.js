@@ -25,12 +25,22 @@ module.exports = server => {
             socket.emit("candidates", room);
             console.log(masterId);
             io.to(masterId).emit("enterMaster", data[1]);
-            // socket.emit("enterMaster", data[1]);
         })
 
         socket.on("start", (data) => {
             io.to(data).emit("startTest");
         })
+
+        socket.on("end", (data) => {
+            socket.emit("endTest");
+        })
+
+        result = {};
+        socket.on("collect", data => {
+            result[data[0]] = data[1];
+        })
+
+        socket.emit("getResult", result);
     })
 
     return io;
